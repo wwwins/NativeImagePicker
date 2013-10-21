@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Nativeimagepicker" package="com.flashisobar.nativeimagepicker" version="1.0.0" company="flashisobar" />
+	<app main="Main" path="Export" file="Nativeimagepicker" />
+	<window orientation="portrait" background="#00393B" if="ios" />
+	
+	<source path="Source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="Extension" />
+	<haxelib name="actuate" />
+	
+	<assets path="Assets" rename="assets" exclude="openfl.svg" />
+	<icon path="Assets/Icon.png" size="57" />
+	<icon path="Assets/Icon@2x.png" size="114" />
+	<icon path="Assets/Icon-72.png" size="72" />
+	<icon path="Assets/Icon-72@2x.png" size="144" />
+
+	
+</project>
