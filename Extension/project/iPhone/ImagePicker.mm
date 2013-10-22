@@ -3,7 +3,6 @@
 
 #include "Extension.h"
 
-
 // UIViewController -> NSObject
 @interface ImagePickerDelegate : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -13,6 +12,8 @@
 + (ImagePickerDelegate *)sharedInstance;
 
 + (bool)isAvailable;
+
+- (UIImage *)resizeImage:(UIImage *)image Size:(CGSize)size;
 
 @end
 
@@ -69,7 +70,7 @@ extern "C" void sendEvent(int type, const char *data);
 	if(ImagePickerDelegate.isAvailable) {
     UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
     if(!self.imageView) {
-      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
+      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
       [rootView addSubview:self.imageView];
     }
     if(!self.picker) {
@@ -93,7 +94,7 @@ extern "C" void sendEvent(int type, const char *data);
     UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
 
     if(!self.imageView) {
-      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
+      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
       [rootView addSubview:self.imageView];
     }
 
@@ -112,12 +113,20 @@ extern "C" void sendEvent(int type, const char *data);
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
 	NSLog(@"mm:didFinishPicking");
 
-  UIImage *chosenImage = [info objectForKey:UIImagePickerControllerEditedImage];
+  //UIImage *chosenImage = [self resizeImage:[info objectForKey:UIImagePickerControllerEditedImage] Size:CGSizeMake(250, 250)];
+  //UIImage *chosenImage = [info objectForKey:UIImagePickerControllerEditedImage];
+  //UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
 	//self.imageView = [[UIImageView alloc] initWithImage: chosenImage];
-	//self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 150, 200)];
-	self.imageView.image = chosenImage;
+	//self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 150, 150)];
+  //self.imageView.image = chosenImage;
+  //self.imageView.image = [info objectForKey:UIImagePickerControllerEditedImage];
+	//self.imageView.image = [[info objectForKey:UIImagePickerControllerOriginalImage] resizedImageToSize:CGSizeMake(150, 150)];
+  //self.imageView.frame = CGRectMake(10, 20, 150, 150);
+  //self.imageView.image = chosenImage;
+  //self.imageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerEditedImage] Size:CGSizeMake(150, 250)];
 	//[[[UIApplication sharedApplication] keyWindow] addSubview:self.imageView];
 
+  self.imageView.image = [info objectForKey:UIImagePickerControllerEditedImage];
 	[self.picker dismissViewControllerAnimated:YES completion:NULL];
 
 	sendEvent(1, "didFinishPicking");
@@ -131,6 +140,17 @@ extern "C" void sendEvent(int type, const char *data);
 
 	sendEvent(1, "cancel");
 }
+
+- (UIImage *)resizeImage:(UIImage *)image Size:(CGSize)size {
+
+  UIGraphicsBeginImageContext(size);
+  [image drawInRect:CGRectMake(0,0,size.width,size.height)];
+  UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return newImage;
+
+}
+
 
 @end
 

@@ -12,7 +12,7 @@ import motion.easing.Linear;
 
 class Main extends Sprite {
 
-	static inline var OFFSET_Y:Int = 200;
+	static inline var OFFSET_Y:Int = 280;
   static inline var BTN_WIDTH:Int = 90;
 
 	private var format:TextFormat;

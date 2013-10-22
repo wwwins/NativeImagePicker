@@ -22,6 +22,7 @@
 		<compilerflag value="-Iinclude"/>
 
 		<file name="iPhone/ImagePicker.mm"/>
+
 	</files>
 	
 	<set name="name_prefix" value="lib" if="iphone"/>
