@@ -67,9 +67,16 @@ extern "C" void sendEvent(int type, const char *data);
 	NSLog(@"mm:takePhoto");
 
 	if(ImagePickerDelegate.isAvailable) {
-	  self.picker = [[UIImagePickerController alloc] init];
-		self.picker.delegate = self;
-		self.picker.allowsEditing = YES;
+    UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+    if(!self.imageView) {
+      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
+      [rootView addSubview:self.imageView];
+    }
+    if(!self.picker) {
+	    self.picker = [[UIImagePickerController alloc] init];
+		  self.picker.delegate = self;
+		  self.picker.allowsEditing = YES;
+    }
 		self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
 
 		//[self presentViewController:picker animated:YES completion:NULL];
@@ -85,13 +92,17 @@ extern "C" void sendEvent(int type, const char *data);
 
     UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
 
-    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
-    [rootView addSubview:self.imageView];
+    if(!self.imageView) {
+      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
+      [rootView addSubview:self.imageView];
+    }
 
-    self.picker = [[UIImagePickerController alloc] init];
-    //picker.delegate = [ImagePickerDelegate sharedInstance];
-	  self.picker.delegate = self;
-	  self.picker.allowsEditing = YES;
+    if(!self.picker) {
+      self.picker = [[UIImagePickerController alloc] init];
+      //picker.delegate = [ImagePickerDelegate sharedInstance];
+	    self.picker.delegate = self;
+	    self.picker.allowsEditing = YES;
+    }
     self.picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     
 	//[self presentViewController:picker animated:YES completion:NULL];
