@@ -31,12 +31,12 @@ class Main extends Sprite {
 
 		label = new TextField();
 		label.defaultTextFormat = format;
-		label.text = "";
+		label.text = "demo ImagePicker";
 		label.selectable = false;
 		label.x = 10;
 		label.y = OFFSET_Y - 30;
 		label.width = 150;
-		//addChild(label);
+		addChild(label);
 		
 		label_mode = new TextField();
 		label_mode.defaultTextFormat = format;
