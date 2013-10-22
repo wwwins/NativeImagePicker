@@ -29,15 +29,15 @@ extern "C" void sendEvent(int type, const char *data);
 
 + (ImagePickerDelegate *)sharedInstance {
 
-	if (!sharedInstance) {
-		NSLog(@"mm:init");
-		sharedInstance = [[ImagePickerDelegate alloc] init];
-	}
-	return sharedInstance;
+  if (!sharedInstance) {
+    NSLog(@"mm:init");
+    sharedInstance = [[ImagePickerDelegate alloc] init];
+  }
+  return sharedInstance;
 }
 
 + (bool)isAvailable {
-    return [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == YES;
+  return [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == YES;
 }
 
 - (void) dealloc {
@@ -53,72 +53,72 @@ extern "C" void sendEvent(int type, const char *data);
 }
 
 /*
-- (void)viewDidAppear:(BOOL)animated {
+   - (void)viewDidAppear:(BOOL)animated {
 
-	[super viewDidAppear:animated];
+   [super viewDidAppear:animated];
 
-}
-*/
+   }
+ */
 
 - (void)takePhoto {
 
-	NSLog(@"mm:takePhoto");
+  NSLog(@"mm:takePhoto");
 
-	if(ImagePickerDelegate.isAvailable) {
+  if(ImagePickerDelegate.isAvailable) {
     UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
     if(!self.imageView) {
       self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
       [rootView addSubview:self.imageView];
     }
     if(!self.picker) {
-	    self.picker = [[UIImagePickerController alloc] init];
-		  self.picker.delegate = self;
-		  self.picker.allowsEditing = YES;
+      self.picker = [[UIImagePickerController alloc] init];
+      self.picker.delegate = self;
+      self.picker.allowsEditing = YES;
     }
-		self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
 
-		[[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:self.picker animated:YES completion:NULL];
-	}
-	else NSLog(@"no camera");
+    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:self.picker animated:YES completion:NULL];
+  }
+  else NSLog(@"no camera");
 }
 
 - (void)selectPhoto {
 
-	trace("selectPhoto");
+  trace("selectPhoto");
 
-    UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+  UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
 
-    if(!self.imageView) {
-      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
-      [rootView addSubview:self.imageView];
-    }
+  if(!self.imageView) {
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
+    [rootView addSubview:self.imageView];
+  }
 
-    if(!self.picker) {
-      self.picker = [[UIImagePickerController alloc] init];
-	    self.picker.delegate = self;
-	    self.picker.allowsEditing = YES;
-    }
-    self.picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:self.picker animated:YES completion:NULL];
+  if(!self.picker) {
+    self.picker = [[UIImagePickerController alloc] init];
+    self.picker.delegate = self;
+    self.picker.allowsEditing = YES;
+  }
+  self.picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+
+  [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:self.picker animated:YES completion:NULL];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-	NSLog(@"mm:didFinishPicking");
+  NSLog(@"mm:didFinishPicking");
 
   self.imageView.image = [info objectForKey:UIImagePickerControllerEditedImage];
-	[self.picker dismissViewControllerAnimated:YES completion:NULL];
+  [self.picker dismissViewControllerAnimated:YES completion:NULL];
 
-	sendEvent(1, "didFinishPicking");
+  sendEvent(1, "didFinishPicking");
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
 
-	NSLog(@"mm:cancel");
+  NSLog(@"mm:cancel");
 
   [self.picker dismissViewControllerAnimated:YES completion:NULL];
 
-	sendEvent(1, "cancel");
+  sendEvent(1, "cancel");
 }
 
 - (UIImage *)resizeImage:(UIImage *)image Size:(CGSize)size {
@@ -137,32 +137,32 @@ extern "C" void sendEvent(int type, const char *data);
 namespace extension {
 
 
-	bool initImagePicker() {
+  bool initImagePicker() {
 
-		UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Info"
-			message:[NSString stringWithFormat:@"Device has camera:%d", [ImagePickerDelegate isAvailable]]
-			delegate:nil
-			cancelButtonTitle:@"OK"
-			otherButtonTitles: nil];
+    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Info"
+      message:[NSString stringWithFormat:@"Device has camera:%d", [ImagePickerDelegate isAvailable]]
+      delegate:nil
+      cancelButtonTitle:@"OK"
+      otherButtonTitles: nil];
 
-		[myAlertView show];
+    [myAlertView show];
 
-		if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-			return false;
-		}
-
-		return true;
-	}
-
-	void takePhoto() {
-
-		[[ImagePickerDelegate sharedInstance] takePhoto];
-
-	}
-    
-    void selectPhoto() {
-
-		[[ImagePickerDelegate sharedInstance] selectPhoto];
-
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+      return false;
     }
+
+    return true;
+  }
+
+  void takePhoto() {
+
+    [[ImagePickerDelegate sharedInstance] takePhoto];
+
+  }
+
+  void selectPhoto() {
+
+    [[ImagePickerDelegate sharedInstance] selectPhoto];
+
+  }
 }

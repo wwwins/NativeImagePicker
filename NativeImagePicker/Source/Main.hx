@@ -12,127 +12,127 @@ import motion.easing.Linear;
 
 class Main extends Sprite {
 
-	static inline var OFFSET_Y:Int = 280;
+  static inline var OFFSET_Y:Int = 280;
   static inline var BTN_WIDTH:Int = 90;
 
-	private var format:TextFormat;
-	private var label:TextField;
-	private var label_mode:TextField;
-	private var mode:Int = 0;
+  private var format:TextFormat;
+  private var label:TextField;
+  private var label_mode:TextField;
+  private var mode:Int = 0;
 
-	public function new () {
-		
-		super ();
-		
-		format = new TextFormat();
-		format.font = "Arial";
-		format.color = 0xE5EDB6;
-		format.size = 14;
+  public function new () {
 
-		label = new TextField();
-		label.defaultTextFormat = format;
-		label.text = "demo ImagePicker";
-		label.selectable = false;
-		label.x = 10;
-		label.y = OFFSET_Y - 30;
-		label.width = 150;
-		addChild(label);
-		
-		label_mode = new TextField();
-		label_mode.defaultTextFormat = format;
-		label_mode.text = "";
-		label_mode.selectable = false;
-		label_mode.x = label.width + 5;
-		label_mode.y = OFFSET_Y - 30;
-		label_mode.width = 60;
-		//addChild(label_mode);
+    super ();
 
-		var btn1 = createBtn("check");
-		btn1.x = 10;
-		btn1.y = OFFSET_Y;
-		addChild(btn1);
+    format = new TextFormat();
+    format.font = "Arial";
+    format.color = 0xE5EDB6;
+    format.size = 14;
 
-		var btn2 = createBtn("take photo");
-		btn2.x = 10 + (10 + BTN_WIDTH)*1;
-		btn2.y = OFFSET_Y;
-		addChild(btn2);
+    label = new TextField();
+    label.defaultTextFormat = format;
+    label.text = "demo ImagePicker";
+    label.selectable = false;
+    label.x = 10;
+    label.y = OFFSET_Y - 30;
+    label.width = 150;
+    addChild(label);
 
-		var btn3 = createBtn("select photo");
-		btn3.x = 10 + (10 + BTN_WIDTH)*2;
-		btn3.y = OFFSET_Y;
-		addChild(btn3);
+    label_mode = new TextField();
+    label_mode.defaultTextFormat = format;
+    label_mode.text = "";
+    label_mode.selectable = false;
+    label_mode.x = label.width + 5;
+    label_mode.y = OFFSET_Y - 30;
+    label_mode.width = 60;
+    //addChild(label_mode);
 
-		btn1.addEventListener(MouseEvent.CLICK, check);
-		btn2.addEventListener(MouseEvent.CLICK, takePhoto);
-		btn3.addEventListener(MouseEvent.CLICK, selectPhoto);
+    var btn1 = createBtn("check");
+    btn1.x = 10;
+    btn1.y = OFFSET_Y;
+    addChild(btn1);
 
-		Extension.setEventHandle(onEvent);
+    var btn2 = createBtn("take photo");
+    btn2.x = 10 + (10 + BTN_WIDTH)*1;
+    btn2.y = OFFSET_Y;
+    addChild(btn2);
 
-		startAnimation();
-	}
-	
-	private function startAnimation():Void {
-		var box:Shape = new Shape();
-		box.graphics.beginFill(0xF6695B, 1);
-		box.graphics.drawRect(0,0,10,10);
-		box.graphics.endFill();
-		box.y = 0;
-		addChild(box);
+    var btn3 = createBtn("select photo");
+    btn3.x = 10 + (10 + BTN_WIDTH)*2;
+    btn3.y = OFFSET_Y;
+    addChild(btn3);
 
-		// loop
-		Actuate.tween(box, 2, { x:stage.stageWidth-box.width } ).ease(Linear.easeNone).repeat().reflect();
-	}
+    btn1.addEventListener(MouseEvent.CLICK, check);
+    btn2.addEventListener(MouseEvent.CLICK, takePhoto);
+    btn3.addEventListener(MouseEvent.CLICK, selectPhoto);
 
-	private function onEvent(e:Dynamic) {
-		var data = Reflect.field(e, "data");
-		var type = Reflect.field(e, "type");
-		trace("onEvent:"+type+":"+data);
+    Extension.setEventHandle(onEvent);
 
-		if (type=="0") {
-			//label.text = "Date:"+data;
-		}
-		if (type=="1") {
-			Lib.resume();
-		}
-	}
+    startAnimation();
+  }
 
-	private function createBtn(txt:String):Sprite {
+  private function startAnimation():Void {
+    var box:Shape = new Shape();
+    box.graphics.beginFill(0xF6695B, 1);
+    box.graphics.drawRect(0,0,10,10);
+    box.graphics.endFill();
+    box.y = 0;
+    addChild(box);
 
-		var tf:TextField = new TextField();
-		tf.defaultTextFormat = format;
-		tf.text = txt;
-		tf.selectable = false;
-		tf.x = (BTN_WIDTH-tf.textWidth)*.5;
-		tf.y = (36-tf.textHeight)*.5;
+    // loop
+    Actuate.tween(box, 2, { x:stage.stageWidth-box.width } ).ease(Linear.easeNone).repeat().reflect();
+  }
 
-		var btn:Sprite = new Sprite();
-		btn.graphics.beginFill(0x00766C, 1);
-		btn.graphics.drawRoundRect(0, 0, BTN_WIDTH, 36, 12, 12);
-		btn.graphics.endFill();
-	
-		btn.addChild(tf);
+  private function onEvent(e:Dynamic) {
+    var data = Reflect.field(e, "data");
+    var type = Reflect.field(e, "type");
+    trace("onEvent:"+type+":"+data);
 
-		return btn;
-	}
+    if (type=="0") {
+      //label.text = "Date:"+data;
+    }
+    if (type=="1") {
+      Lib.resume();
+    }
+  }
 
-	private function check(e:MouseEvent):Void {
+  private function createBtn(txt:String):Sprite {
 
-		//trace("show:"+Extension.sampleMethod(777));
-		Extension.initImagePicker();
-	}
+    var tf:TextField = new TextField();
+    tf.defaultTextFormat = format;
+    tf.text = txt;
+    tf.selectable = false;
+    tf.x = (BTN_WIDTH-tf.textWidth)*.5;
+    tf.y = (36-tf.textHeight)*.5;
 
-	private function takePhoto(e:MouseEvent):Void {
+    var btn:Sprite = new Sprite();
+    btn.graphics.beginFill(0x00766C, 1);
+    btn.graphics.drawRoundRect(0, 0, BTN_WIDTH, 36, 12, 12);
+    btn.graphics.endFill();
 
-		Lib.pause();
-		Extension.takePhoto();
+    btn.addChild(tf);
 
-	}
+    return btn;
+  }
 
-	private function selectPhoto(e:MouseEvent):Void {
+  private function check(e:MouseEvent):Void {
 
-		Lib.pause();
-		Extension.selectPhoto();
+    //trace("show:"+Extension.sampleMethod(777));
+    Extension.initImagePicker();
+  }
 
-	}
+  private function takePhoto(e:MouseEvent):Void {
+
+    Lib.pause();
+    Extension.takePhoto();
+
+  }
+
+  private function selectPhoto(e:MouseEvent):Void {
+
+    Lib.pause();
+    Extension.selectPhoto();
+
+  }
 
 }
