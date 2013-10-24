@@ -1,18 +1,27 @@
 package;
 
+import haxe.io.Bytes;
+import haxe.io.BytesData;
+
 import flash.Lib;
 import flash.display.Sprite;
 import flash.display.Shape;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Loader;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.IOErrorEvent;
+import flash.utils.ByteArray;
 
 import motion.Actuate;
 import motion.easing.Linear;
 
 class Main extends Sprite {
 
-  static inline var OFFSET_Y:Int = 280;
+  static inline var OFFSET_Y:Int = 400;
   static inline var BTN_WIDTH:Int = 90;
 
   private var format:TextFormat;
@@ -44,8 +53,8 @@ class Main extends Sprite {
     label_mode.selectable = false;
     label_mode.x = label.width + 5;
     label_mode.y = OFFSET_Y - 30;
-    label_mode.width = 60;
-    //addChild(label_mode);
+    label_mode.width = 150;
+    addChild(label_mode);
 
     var btn1 = createBtn("check");
     btn1.x = 10;
@@ -86,14 +95,38 @@ class Main extends Sprite {
   private function onEvent(e:Dynamic) {
     var data = Reflect.field(e, "data");
     var type = Reflect.field(e, "type");
-    trace("onEvent:"+type+":"+data);
+    trace("onEvent:"+type+":" #if !cpp +data #end );
 
     if (type=="0") {
-      //label.text = "Date:"+data;
+      label.text = "";
     }
     if (type=="1") {
       Lib.resume();
     }
+    if (type=="2") {
+      Lib.resume();
+      //trace("Decode:"+Base64.decodeBytesData(data));
+      //label_mode.text = Base64.decodeBytesData(data).toString();
+      loadBase64JPEG(data);
+    }
+  }
+
+  private function loadBase64JPEG(data:String) {
+
+#if cpp
+
+    // bytesData to byteArray
+    //var byteArray = ByteArray.fromBytes(Base64.decodeBytesData(data));
+    //trace("imageBase64JPEG:"+byteArray.length+":"+byteArray.position);
+
+    var bmd:BitmapData = BitmapData.loadFromHaxeBytes(Base64.decodeBytesData(data));
+    var bitmap:Bitmap = new Bitmap(bmd);
+    bitmap.x = 170;
+    bitmap.y = 20;
+    addChild(bitmap);
+
+#end
+
   }
 
   private function createBtn(txt:String):Sprite {

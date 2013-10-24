@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "Base64.h"
+
 #include "Extension.h"
 
 // UIViewController -> NSObject
@@ -67,7 +69,7 @@ extern "C" void sendEvent(int type, const char *data);
   if(ImagePickerDelegate.isAvailable) {
     UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
     if(!self.imageView) {
-      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
+      self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
       [rootView addSubview:self.imageView];
     }
     if(!self.picker) {
@@ -89,7 +91,7 @@ extern "C" void sendEvent(int type, const char *data);
   UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
 
   if(!self.imageView) {
-    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 250, 250)];
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 20, 150, 150)];
     [rootView addSubview:self.imageView];
   }
 
@@ -106,10 +108,33 @@ extern "C" void sendEvent(int type, const char *data);
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
   NSLog(@"mm:didFinishPicking");
 
-  self.imageView.image = [info objectForKey:UIImagePickerControllerEditedImage];
   [self.picker dismissViewControllerAnimated:YES completion:NULL];
 
-  sendEvent(1, "didFinishPicking");
+  //self.imageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerEditedImage] Size:CGSizeMake(150, 150)];
+  self.imageView.image = [info objectForKey:UIImagePickerControllerEditedImage];
+
+  // convert image to Base64
+  //NSData *imageData = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerEditedImage], 1.0);
+  NSData *imageData = UIImageJPEGRepresentation([self resizeImage:[info objectForKey:UIImagePickerControllerEditedImage] Size:CGSizeMake(150, 150)], 1.0);
+  [Base64 initialize];
+  NSString *strEncoded = [Base64 encode:imageData];
+
+  /* convert string to Base64
+  NSString* str = @"hello world~妳好世界";
+  NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *strEncoded = [Base64 encode:data];
+  NSLog(@"data:%@", strEncoded);
+  */
+
+  /* save to local file("/Users/wwwins/Library/Application Support/iPhone Simulator/6.1/Applications/123-123-123-123/Documents/Image.jpg").
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Image.jpg"];
+  NSLog(@"%@", filePath);
+  [imageData writeToFile:filePath atomically:YES];
+  */
+
+  //sendEvent(1, "didFinishPicking");
+  sendEvent(2, [strEncoded cStringUsingEncoding:NSASCIIStringEncoding]); 
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
