@@ -39,10 +39,8 @@ class Base64 {
     if (paddingSize != -1) {
       base64 = base64.substr(0, base64.length - paddingSize);
     }
-
     var encodings = Bytes.ofString(BASE_64_ENCODINGS);
-    var bytes = new BaseCode(encodings).decodeBytes(Bytes.ofString(base64));
-    return bytes;
+    return new BaseCode(encodings).decodeBytes(Bytes.ofString(base64));
   }
 
 }
